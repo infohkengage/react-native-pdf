@@ -89,6 +89,7 @@ const float MIN_SCALE = 1.0f;
         
         [self bindTap];
     }
+    [_pdfView setBackgroundColor:[UIColor whiteColor]];
     
     return self;
 }
