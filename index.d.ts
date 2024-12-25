@@ -34,6 +34,7 @@ interface Props {
     onPageSingleTap?: (page: number) => void,
     onScaleChanged?: (scale: number) => void,
     onPressLink?: (url: string) => void,
+    renderActivityIndicator?: (progress: number) => React.ReactElement,
 }
 
 declare class Pdf extends React.Component<Props, any> {
