@@ -14,13 +14,14 @@ import {
     View,
     Platform,
     ViewPropTypes,
-    StyleSheet
+    StyleSheet,
+    Text,
+    Image
 } from 'react-native';
 
 import RNFetchBlob from 'rn-fetch-blob';
 
 const SHA1 = require('crypto-js/sha1');
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import PdfView from './PdfView';
 
 export default class Pdf extends Component {
@@ -117,8 +118,8 @@ export default class Pdf extends Component {
 
     componentDidUpdate(prevProps) {
 
-        const nextSource = resolveAssetSource(this.props.source);
-        const curSource = resolveAssetSource(prevProps.source);
+        const nextSource = Image.resolveAssetSource(this.props.source);
+        const curSource = Image.resolveAssetSource(prevProps.source);
 
         if ((nextSource.uri !== curSource.uri)) {
             // if has download task, then cancel it.
@@ -158,7 +159,7 @@ export default class Pdf extends Component {
 
     _loadFromSource = (newSource) => {
 
-        const source = resolveAssetSource(newSource) || {};
+        const source = Image.resolveAssetSource(newSource) || {};
 
         let uri = source.uri || '';
 
@@ -408,7 +409,7 @@ export default class Pdf extends Component {
                                     : <Text>{`${(getProgress * 100).toFixed(2)}%`}</Text>}
                             </View>):(
                                 Platform.OS === "android"?(
-                                        <PdfCustom
+                                        <PdfCustomAndroid
                                             ref={component => (this._root = component)}
                                             {...this.props}
                                             style={[{flex:1,backgroundColor: '#EEE'}, this.props.style]}
@@ -417,7 +418,7 @@ export default class Pdf extends Component {
                                         />
                                     ):(
                                         this.state.isSupportPDFKit === 1?(
-                                                <PdfCustom
+                                                <PdfCustomIOS
                                                     ref={component => (this._root = component)}
                                                     {...this.props}
                                                     style={[{backgroundColor: '#EEE',overflow: 'hidden'}, this.props.style]}
@@ -448,11 +449,11 @@ export default class Pdf extends Component {
 
 
 if (Platform.OS === "android") {
-    var PdfCustom = requireNativeComponent('RCTPdf', Pdf, {
+    var PdfCustomAndroid = requireNativeComponent('RCTPdf', Pdf, {
         nativeOnly: {path: true, onChange: true},
     })
 } else if (Platform.OS === "ios") {
-    var PdfCustom = requireNativeComponent('RCTPdfView', Pdf, {
+    var PdfCustomIOS = requireNativeComponent('RCTPdfView', Pdf, {
         nativeOnly: {path: true, onChange: true},
     })
 }
